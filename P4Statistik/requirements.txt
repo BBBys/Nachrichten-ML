@@ -1,0 +1,9 @@
+logging
+mysql-connector-python
+argparse
+#joblib==1.4.2
+#numpy==2.2.3
+#scikit-learn
+#scipy==1.15.2
+#threadpoolctl==3.5.0
+

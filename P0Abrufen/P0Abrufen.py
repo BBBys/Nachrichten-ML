@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 #
 #  mytest.py
-#  
-
+#    Nachrichten-ML © 2025 by Burkhard Borys is licensed under CC BY-NC-SA 4.0 
+#    https://creativecommons.org/licenses/by-nc-sa/4.0/
+#    This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
 import mysql.connector
 import logging,argparse
 from DBCreate import dbcreate
@@ -119,17 +120,17 @@ def main(abstand,ausgabe ):
         #es gibt indestens 2 Aufträge
         maxdate=datetime.now()-timedelta(hours=abstand)
             
-        for Auftrag in Aufträge:
-            logging.debug(Auftrag)
-            zeit=Auftrag[2]
-            logging.info(f"{TITEL}: Start Auftrag {Auftrag[0]}")
-            if(zeit<maxdate):
-                (ok,ziel,datei)=Bearbeite(Auftrag,ausgabe)
-                if (ok):
-                    dbupdate(ziel,datei,mydb)
-                    return  ' einen bearbeitet'
-            else:
-                logging.info('noch zu früh für %s'%Auftrag[1])
+        Auftrag=Aufträge[0]:    # nur den ersten
+        logging.debug(Auftrag)
+        zeit=Auftrag[2]
+        logging.info(f"{TITEL}: Start Auftrag {Auftrag[0]}")
+        if(zeit<maxdate):
+            (ok,ziel,datei)=Bearbeite(Auftrag,ausgabe)
+            if (ok):
+                dbupdate(ziel,datei,mydb)
+                return  ' einen bearbeitet'
+        else:
+            logging.info('noch zu früh für %s'%Auftrag[1])
 
     except mysql.connector.errors.ProgrammingError as e:
         logging.error(e)

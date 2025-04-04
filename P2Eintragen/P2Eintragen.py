@@ -22,7 +22,7 @@ def main():
 
             if len(Aufträge)<1:#es muss Records geben
                 logging.info('für %s liegt nichts vor'%TITEL)
-                return True
+                return 0
         #with mycursor    
         Auftrag=Aufträge[0]
         logging.debug(Auftrag)
