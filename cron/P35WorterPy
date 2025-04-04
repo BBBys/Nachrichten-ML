@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/local/news/P3Worter/.wenv/bin/python /usr/local/news/P3Worter/P31Worter.py -t 300 -l 5 >> /var/log/newsp.log

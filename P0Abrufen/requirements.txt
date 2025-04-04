@@ -1,0 +1,6 @@
+mysql-connector-python
+logging
+datetime
+#delorean
+feedparser
+argparse

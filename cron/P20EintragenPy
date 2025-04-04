@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/local/news/P2Eintragen/.p2venv/bin/python /usr/local/news/P2Eintragen/P2Eintragen.py  >> /var/log/newsp.log
