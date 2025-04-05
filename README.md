@@ -10,3 +10,5 @@ im Abstand von min. 5 Stunden und Speicherung von Titel, Kurzfassung, Link zur V
 * 1-, 3- und 5-Wort-Ketten
 * nach Ausblenden von Stopp-Wörtern
 * für gesamten Beobachtungszeitraum und die letzte Woche
+> [!NOTE]
+> so weit erst einmal fertig
