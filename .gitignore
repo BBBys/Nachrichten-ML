@@ -164,3 +164,4 @@ cython_debug/
 /P2Eintragen/.p2venv
 /P3Worter/.wenv
 *.code-workspace
+*.tmp

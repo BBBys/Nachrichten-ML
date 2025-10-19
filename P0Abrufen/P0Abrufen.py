@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-#  mytest.py
+#    P0Abrufen.py
 #    Nachrichten-ML © 2025 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
 #    https://creativecommons.org/licenses/by-nc-sa/4.0/
-#    This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+
 import mysql.connector
 import logging, argparse
 from DBCreate import dbcreate
@@ -133,6 +132,7 @@ def main(abstand, ausgabe):
     Returns:
         string: Meldungen, nicht notwendig
     """
+    rtncode=0
     try:
         mydb = mysql.connector.connect(
             host=DBHOST, db=DB, user=DBUSER, port=DBPORT, password=DBPWD
@@ -157,25 +157,27 @@ def main(abstand, ausgabe):
             (ok, ziel, datei) = Bearbeite(Auftrag, ausgabe)
             if ok:
                 dbupdate(ziel, datei, mydb)
-                return " einen bearbeitet"
+                rtncode=0   
         else:
             logging.info("noch zu früh für %s" % Auftrag[1])
+            rtncode=1
 
     except mysql.connector.errors.ProgrammingError as e:
-        logging.error(e)
+        rtncode=2
         match e.errno:
             case 1064:
-                print("Syntax Error: {}".format(e))
+                logging.error("SQL Syntax Error: {}".format(e))
             case 1146:
                 logging.warning("DB nicht vorhanden: {}".format(e))
                 dbcreate(mycursor, DBTBB)
             case _:
                 logging.fatal(e)
     except Exception as e:
+        rtncode=3
         logging.fatal(e)
     finally:
         mydb.close()
-    return 0
+    return rtncode
 
 
 if __name__ == "__main__":

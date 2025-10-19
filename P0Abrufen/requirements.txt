@@ -1,4 +1,3 @@
-emit
 mysql-connector-python
 logging
 datetime

@@ -6,7 +6,7 @@ import math
 DATEFORMAT = "%y%m%d"
 # DAYS   30  14  7
 # MIN    6   4   4
-DAYSRECENT = 30  # Anzahl Tage für "aktuell"
+DAYSRECENT = 7  # Anzahl Tage für "aktuell"
 MINCOUNT = DAYSRECENT // 5  # Minimale Häufigkeit für Berücksichtigung
 MINSCORE = 10.0  # Minimale Signifikanz für Ausgabe
 
@@ -18,7 +18,7 @@ def parse_line(line):
     return date, words
 
 
-def get_ngrams(words, n=1):
+def getToken(words, n=1):
     return [" ".join(words[i : i + n]) for i in range(len(words) - n + 1)]
 
 
@@ -28,20 +28,20 @@ def analyze(file_path):
 
     recentcounts = Counter()
     pastcounts = Counter()
-    totalrecent = 0
-    totalpast = 0
+    tokenNeu = 0
+    tokenGesamt = 0
 
     with open(file_path, encoding="utf-8") as f:
         for line in f:
             date, words = parse_line(line)
             for n in [1, 2, 3]:  # Unigrams und Bigrams
-                ngrams = get_ngrams(words, n)
+                ngrams = getToken(words, n)
                 if date >= recentcutoff:
                     recentcounts.update(ngrams)
-                    totalrecent += len(ngrams)
+                    tokenNeu += len(ngrams)
                 else:
                     pastcounts.update(ngrams)
-                    totalpast += len(ngrams)
+                    tokenGesamt += len(ngrams)
 
     # Signifikanzbewertung (Log-Likelihood-Ratio)
     def llr(krecent, kpast, nrecent, npast):
@@ -63,15 +63,16 @@ def analyze(file_path):
     results = []
     allkeys = set(recentcounts.keys()) | set(pastcounts.keys())
     for key in allkeys:
-        score = llr(recentcounts[key], pastcounts[key], totalrecent, totalpast)
+        score = llr(recentcounts[key], pastcounts[key], tokenNeu, tokenGesamt)
         if score > MINSCORE and recentcounts[key] >= MINCOUNT:  # Schwellenwert
             results.append((key, score, recentcounts[key]))
 
     results.sort(key=lambda x: -x[1])
-    print(f"\n{DAYSRECENT} recent days, cutoff date: {recentcutoff}")
-    print(f"Total recent ngrams: {totalrecent}, Total past ngrams: {totalpast}")
+    print(f"\n{DAYSRECENT} Tage seit {recentcutoff}")
+    print(f"{tokenGesamt}\tToken gesamt")
+    print(f"{tokenNeu}\taktuelle Token ({(100.0*tokenNeu)//tokenGesamt} % von allen)")
     print(
-        f"Considered {len(allkeys)} unique ngrams, found {len(results)} significant ones."
+        f"von {len(allkeys)} Types sind {len(results)} signifikent neu erschienen"
     )
-    print(f"Top ngrams (count > {MINCOUNT}, score > {MINSCORE}):")
+    print(f"Top Types (mindestens {MINCOUNT} x aufgetreten, Einzigartigkeit > {MINSCORE}):")
     return results

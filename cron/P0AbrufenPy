@@ -1,2 +1,5 @@
 #!/bin/sh
-/usr/local/news/P0Abrufen/.env/bin/python /usr/local/news/P0Abrufen/P0Abrufen.py -a 12 /var/local/news/ 
+#Spiegel
+/usr/local/bin/news/P0Abrufen/.env/bin/python /usr/local/bin/news/P0Abrufen/P0Abrufen.py -a 12 /var/local/news/ 
+#Tagesschau
+/usr/local/bin/news/P0Abrufen/.env/bin/python /usr/local/bin/news/P0Abrufen/P0Abrufen.py -a 12 /var/local/news/ 

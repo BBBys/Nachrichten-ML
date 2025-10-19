@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/local/news/P21Stop/.p21venv/bin/python /usr/local/news/P21Stop/P21Stop.py /usr/local/news/P21Stop/stop.txt   >> /var/log/newsp.log
+/usr/local/bin/news/P21Stop/.env/bin/python /usr/local/bin/news/P21Stop/P21Stop.py /usr/local/bin/news/P21Stop/stop.txt 

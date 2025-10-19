@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 #
 #  P6altneu.py
-#
+#    Nachrichten-ML © 2025 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
+#    https://creativecommons.org/licenses/by-nc-sa/4.0/
 from dbparam import DBTBB, DBHOST, DBNAME, DBUSER, DBPORT, DBPWD
 import mysql.connector
 import logging

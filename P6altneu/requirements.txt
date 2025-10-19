@@ -1,5 +1,2 @@
-#logging
 mysql-connector-python
-#argparse
-#black
-#datetime
+black
