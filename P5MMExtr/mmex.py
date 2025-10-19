@@ -1,0 +1,2 @@
+def mmex(db):
+    pass

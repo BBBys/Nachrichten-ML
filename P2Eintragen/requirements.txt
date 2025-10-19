@@ -1,3 +1,4 @@
-logging==0.4.9.6
-mysql-connector-python==9.2.0
+logging
+mysql-connector-python
 argparse
+black

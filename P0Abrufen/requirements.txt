@@ -1,6 +1,7 @@
+emit
 mysql-connector-python
 logging
 datetime
-#delorean
+black
 feedparser
 argparse

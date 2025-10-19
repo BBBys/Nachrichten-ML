@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/local/news/P0Abrufen/.mysenv/bin/python /usr/local/news/P0Abrufen/P0Abrufen.py -a 12 /var/local/news/ >> /var/log/newsp.log
+/usr/local/news/P0Abrufen/.env/bin/python /usr/local/news/P0Abrufen/P0Abrufen.py -a 12 /var/local/news/ 

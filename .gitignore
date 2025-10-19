@@ -163,3 +163,4 @@ cython_debug/
 /P21Stop/.p21venv
 /P2Eintragen/.p2venv
 /P3Worter/.wenv
+*.code-workspace

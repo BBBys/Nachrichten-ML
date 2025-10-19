@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #  DBCreate.py
-#  
+#
 #
 import mysql.connector
 import logging
@@ -17,7 +17,8 @@ DBTCREATEBB = """ CREATE TABLE `blackboard` (
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"""
 
-def dbcreate(cursor,tabelle):
+
+def dbcreate(cursor, tabelle):
     """erzeugt eine fehlende Tabelle
 
     Args:
@@ -31,7 +32,9 @@ def dbcreate(cursor,tabelle):
         -: 0
     """
     match tabelle:
-        case 'blackboard':cursor.execute(DBTCREATEBB)
-        case _:raise Exception('Tabelle %s Erzeugung unkekannt'%(tabelle))
-    logging.critical('Tabelle nicht vorhanden - erzeugt')
+        case "blackboard":
+            cursor.execute(DBTCREATEBB)
+        case _:
+            raise Exception("Tabelle %s Erzeugung unkekannt" % (tabelle))
+    logging.critical("Tabelle nicht vorhanden - erzeugt")
     return 0

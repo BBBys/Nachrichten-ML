@@ -11,7 +11,7 @@ DBTCREATEBB = """ CREATE TABLE `blackboard` (
  `zeit` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'wann der Eintrag erzeugt wurde',
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"""
-DBCREATEMELDUNGEN="""CREATE TABLE `meldungen` (
+DBCREATEMELDUNGEN = """CREATE TABLE `meldungen` (
  `hash` bigint(20) NOT NULL COMMENT 'Achtung: ändert sich',
  `datum` timestamp NOT NULL DEFAULT current_timestamp(),
  `quelle` tinytext DEFAULT NULL COMMENT 'Quelle der Meldung',
@@ -21,7 +21,7 @@ DBCREATEMELDUNGEN="""CREATE TABLE `meldungen` (
  `link` tinytext DEFAULT NULL,
  PRIMARY KEY (`hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"""
-DBCREATEDATEN="""CREATE TABLE `daten` (
+DBCREATEDATEN = """CREATE TABLE `daten` (
  `hash` bigint(20) NOT NULL COMMENT 'Achtung: ändert sich',
  `zeigerRoh` bigint(20) NOT NULL COMMENT 'Hash der Rohmeldung - Vorsicht: nicht konstant',
  `titel` text DEFAULT NULL,
@@ -38,7 +38,9 @@ DBCREATEDATEN="""CREATE TABLE `daten` (
  `kriterium` tinytext DEFAULT NULL COMMENT 'warum diese Meldung als wichtig einestft wurde',
  PRIMARY KEY (`hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"""
-def dbcreate(cursor,tabelle):
+
+
+def dbcreate(cursor, tabelle):
     """erzeugt eine fehlende Tabelle
 
     Args:
@@ -52,7 +54,9 @@ def dbcreate(cursor,tabelle):
         -: 0
     """
     match tabelle:
-        case 'blackboard':cursor.execute(DBTCREATEBB)
-        case _:raise Exception('Tabelle %s Erzeugung unkekannt'%(tabelle))
-    logging.critical('Tabelle nicht vorhanden - erzeugt')
+        case "blackboard":
+            cursor.execute(DBTCREATEBB)
+        case _:
+            raise Exception("Tabelle %s Erzeugung unkekannt" % (tabelle))
+    logging.critical("Tabelle nicht vorhanden - erzeugt")
     return 0
