@@ -1,4 +1,4 @@
-from dbparam import DBTSTOP, DBTMELDUNGEN
+from dbparam import DBTMELDUNGEN
 import mysql.connector
 import logging
 
@@ -23,19 +23,16 @@ def verdichten(Datenbank):
         readCursor.execute(sql)
         alleDatenSätze = readCursor.fetchall()
         folgenderDatensatz = ("0", "x", "y")
-        folgenderText = folgendeMeldung = ""
+        folgeText = folgeMeldung = ""
         with Datenbank.cursor() as writeCursor:
             for einDatenSatz in alleDatenSätze:
                 vorhergehenderDatensatz = folgenderDatensatz
                 folgenderDatensatz = einDatenSatz
-                vorhergehendrText = folgenderText
-                vorhergehendeMeldung = folgendeMeldung
-                folgenderText = folgenderDatensatz[1].strip().lower()
-                folgendeMeldung = folgenderDatensatz[2].strip().lower()
-                if (
-                    vorhergehendrText == folgenderText
-                    and vorhergehendeMeldung == folgendeMeldung
-                ):
+                vorherText = folgeText
+                vorherMeldung = folgeMeldung
+                folgeText = folgenderDatensatz[1].strip().lower()
+                folgeMeldung = folgenderDatensatz[2].strip().lower()
+                if vorherText == folgeText and vorherMeldung == folgeMeldung:
                     sql2 = f"delete FROM {DBTMELDUNGEN} where hash = {vorhergehenderDatensatz[0]};"
                     # logging.debug(f"***\n{t1}\n{t2}\n***\n{sql2}")
                 else:

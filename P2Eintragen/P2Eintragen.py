@@ -3,13 +3,19 @@
 #
 #  P2Eintragen.py
 #
-from dbparam import *
+# Wichtig:
+# export PYTHONPATH="../NMLlib"
+#
+from dbparam import DBHOST, DB, DBUSER, DBPORT, DBPWD, DBTBB
 from bearbeiten import bearbeiten
 from dbroutinen import dbcreate
 import mysql.connector
 import logging, argparse, os
 
-TITEL = "P2Eintragen"
+TITLE = "P2Eintragen"
+DESCRIPTION = """Auftrag von Blackboard ergibt Pfad zur Datei mit vom Feed abgerufenen 
+Meldungen. Diese bestehen aus Titel, Inhalt und weiteren Angaben und werden nur 
+so weit aufbereitet, dass sie in der DB gespeichert werden können"""
 
 
 def main():
@@ -20,14 +26,14 @@ def main():
         with mydb.cursor() as mycursor:
             SQL = "SELECT id,parameter,parameter2,zeit FROM %s WHERE programm='%s';" % (
                 DBTBB,
-                TITEL,
+                TITLE,
             )
             mycursor.execute(SQL)
             Aufträge = mycursor.fetchall()
             logging.debug("%d Records" % len(Aufträge))
 
             if len(Aufträge) < 1:  # es muss Records geben
-                logging.info("für %s liegt nichts vor" % TITEL)
+                logging.info("für %s liegt nichts vor" % TITLE)
                 return 0
         # with mycursor
         Auftrag = Aufträge[0]
@@ -74,9 +80,10 @@ def main():
 if __name__ == "__main__":
     import sys
 
-    parser = argparse.ArgumentParser(
-        prog=TITEL, description="Zeilen aus Datei in DB aufnehmen"
-    )
+    global Dbg
+    LOG_FORMAT = "%(levelname)s: %(message)s"
+    parser = argparse.ArgumentParser(prog=TITLE, description=DESCRIPTION)
+
     parser.add_argument(
         "-v", "--verbose", dest="pVerbose", action="store_true", help="Debug-Ausgabe"
     )
@@ -84,8 +91,10 @@ if __name__ == "__main__":
     arguments = parser.parse_args()
     Dbg = arguments.pVerbose
     if Dbg:
-        logging.basicConfig(level=logging.DEBUG)
+        LOG_LEVEL = logging.DEBUG
     else:
-        logging.basicConfig(level=logging.INFO)
-    logging.info("Start %s" % (TITEL))
+        LOG_LEVEL = logging.INFO
+    logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL)
+
+    logging.info("Start %s" % (TITLE))
     sys.exit(main())

@@ -45,10 +45,10 @@ def kopieren(db, stf, MAXMLD):
             for d in daten:
                 try:
                     hashAlt = d[0]
-                    t = sauber(d[1], stop) + " " + sauber(d[2], stop)
+                    meldung = sauber(d[1], stop) + " " + sauber(d[2], stop)
 
                     # if t.count(' die ')>0:print(f'***\n{d[1]}\n{d[2]}\n{t}')
-                    sql = f"INSERT INTO {DBTDATEN} (zeigerRoh,meldung) VALUES ({hashAlt},'{t}'); "
+                    sql = f"INSERT INTO {DBTDATEN} (zeigerRoh,meldung) VALUES ({hashAlt},'{meldung}'); "
                     eintrag = eintrag + 1
                     cursor.execute(sql)
                     sql = f"update {DBTMELDUNGEN} set status='kopiert' where hash={hashAlt}; "
@@ -58,7 +58,7 @@ def kopieren(db, stf, MAXMLD):
                     match e.errno:
                         case 1062:
                             logging.warning(
-                                f"kopieren: doppelter Eintrag: {t}, übersprungen und weiter"
+                                f"kopieren: doppelter Eintrag: {meldung}, übersprungen und weiter"
                             )
                         case _:
                             raise e
