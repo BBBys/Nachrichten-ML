@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #    P0Abrufen.py
-#    Nachrichten-ML © 2025 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
+#    Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
 #    https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 import mysql.connector
@@ -23,7 +23,7 @@ DBTBB = "blackboard"
 DSTUNDEN = 12
 UrlSPIEGEL = "https://www.spiegel.de/schlagzeilen/index.rss"
 UrlTAGESSCHAU = "https://www.tagesschau.de/newsticker.rdf"
-FILENAMEMUSTER = "{pfad}{date}{quelle}.rss"
+FILENAMEMUSTER = "{pfad}/{date}{quelle}.rss"
 
 
 def EinträgeWiederherstellen(db):
@@ -107,6 +107,7 @@ def Bearbeite(Auftrag, Pfad):
     Returns:
         (bool, string, string): geklappt?, RSS, Dateiname mit Pfad
     """
+    logging.debug("Bearbeite Auftrag %s --> %s" % (Auftrag[1], Pfad))
     quelle = Auftrag[1]
     filename = FILENAMEMUSTER.format(
         pfad=Pfad, date=datetime.now().strftime("%Y-%m-%d-%H-%M"), quelle=quelle
@@ -188,7 +189,7 @@ if __name__ == "__main__":
     )
     # parser.add_argument("Feed",help="Feed: S[piegel] | T[agesschau]")
     parser.add_argument(
-        "Ausgabe", default="/var/news/", help="Ausgabedatei mit Pfad [/var/news/]"
+        "Ausgabe", default="/var/local/news/", help="Ausgabedatei mit Pfad [/var/local/news/]"
     )
     parser.add_argument(
         "-v", "--verbose", dest="pVerbose", action="store_true", help="Debug-Ausgabe"

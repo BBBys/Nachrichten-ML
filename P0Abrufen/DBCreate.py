@@ -15,7 +15,7 @@ DBTCREATEBB = """ CREATE TABLE `blackboard` (
  `parameter2` tinytext DEFAULT NULL COMMENT 'zusätzlicher Parameter',
  `zeit` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'wann der Eintrag erzeugt wurde',
  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"""
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;"""
 
 
 def dbcreate(cursor, tabelle):
@@ -31,10 +31,11 @@ def dbcreate(cursor, tabelle):
     Returns:
         -: 0
     """
+    logging.info("dbcreate:Tabelle %s nicht vorhanden - wird erzeugt" % (tabelle))
     match tabelle:
         case "blackboard":
             cursor.execute(DBTCREATEBB)
         case _:
             raise Exception("Tabelle %s Erzeugung unkekannt" % (tabelle))
-    logging.critical("Tabelle nicht vorhanden - erzeugt")
+    logging.info("dbcreate:Tabelle nicht vorhanden - wurde erzeugt")
     return 0
