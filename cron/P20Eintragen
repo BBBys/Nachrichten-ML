@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/local/bin/news/P2Eintragen/.env/bin/python /usr/local/bin/news/P2Eintragen/P2Eintragen.py  

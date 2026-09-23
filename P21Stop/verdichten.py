@@ -18,6 +18,9 @@ def verdichten(Datenbank):
         readCursor.execute(sql)
         nNeue = readCursor.fetchone()[0]
         logging.info(f"{nNeue} neue Meldungen vorher")
+        # wähle alle Meldungen aus, 
+        # die den Status 'neu' haben und 
+        # sortiere sie nach Titel und Meldung
         sql = f"SELECT hash,titel,meldung FROM {DBTMELDUNGEN} where Status='neu' order by titel,meldung;"
         logging.debug(sql)
         readCursor.execute(sql)
@@ -26,6 +29,9 @@ def verdichten(Datenbank):
         folgenderText = folgendeMeldung = ""
         with Datenbank.cursor() as writeCursor:
             for einDatenSatz in alleDatenSätze:
+                # vergleiche den aktuellen Datensatz mit dem vorherigen
+                # lösche Duplikate, wenn Titel und Meldung identisch sind
+                # sonst setze den Status auf 'vereinzelt'
                 vorhergehenderDatensatz = folgenderDatensatz
                 folgenderDatensatz = einDatenSatz
                 vorhergehendrText = folgenderText

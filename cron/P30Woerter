@@ -1,0 +1,6 @@
+#!/bin/sh
+echo "P3Wörter"
+mono /usr/local/news/P3Woerter.exe
+mono /usr/local/news/P3Woerter.exe
+mono /usr/local/news/P3Woerter.exe
+echo "...P3Wörter"

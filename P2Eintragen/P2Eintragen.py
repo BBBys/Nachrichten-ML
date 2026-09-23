@@ -45,7 +45,7 @@ def main():
         else:
             logging.error(f"Datei fehlt für ID {ID}\n{Auftrag}")
         with mydb.cursor() as mycursor:
-            SQL = f"insert into {DBTBB} (programm) values ('P21Stop');"
+            SQL = f"insert into {DBTBB} (programm) values ('P21Stopp');"
             mycursor.execute(SQL)
             SQL = f"delete FROM {DBTBB} WHERE id='{ID}';"
             mycursor.execute(SQL)

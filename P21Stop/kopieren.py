@@ -28,6 +28,7 @@ def kopieren(db, stf, MAXMLD):
         stop[i] = stop[i].strip()
 
     with db.cursor() as cursor:
+        # wähle alle Meldungen aus, die den Status 'vereinzelt' (aber nicht kopiert) haben
         sql = f"SELECT count(titel) FROM {DBTMELDUNGEN} where status = 'vereinzelt';"
         cursor.execute(sql)
         nMeldungen = cursor.fetchone()[0]
@@ -48,7 +49,7 @@ def kopieren(db, stf, MAXMLD):
                     t = sauber(d[1], stop) + " " + sauber(d[2], stop)
 
                     # if t.count(' die ')>0:print(f'***\n{d[1]}\n{d[2]}\n{t}')
-                    sql = f"INSERT INTO {DBTDATEN} (zeigerRoh,meldung) VALUES ({hashAlt},'{t}'); "
+                    sql = f"INSERT INTO {DBTDATEN} (zeigerRoh,hash,meldung) VALUES ({hashAlt},{hashAlt},'{t}'); "
                     eintrag = eintrag + 1
                     cursor.execute(sql)
                     sql = f"update {DBTMELDUNGEN} set status='kopiert' where hash={hashAlt}; "

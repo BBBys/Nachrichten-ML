@@ -1,0 +1,3 @@
+echo "P0Prüfen..."
+mono /usr/local/news/P9Wartung.exe -p
+echo "...fertig"

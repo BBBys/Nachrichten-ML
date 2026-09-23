@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "P41neuWoerter"
+mono /usr/local/news/P41neuWoerter.exe localhost
+echo "...P41neuWoerter"

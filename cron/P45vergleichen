@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "P45WörterVergleichen"
+mono /usr/local/news/P45WörterVergleichen.exe 
+echo "...P45WörterVergleichen"

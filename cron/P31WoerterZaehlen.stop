@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "P31WörterZählen"
+mono /usr/local/news/P31WörterZählen.exe localhost 
+echo "...P31WörterZählen"
