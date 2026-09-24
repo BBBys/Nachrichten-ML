@@ -1,7 +1,7 @@
 import logging
 import mysql.connector
 
-from dbparam import *
+from dbparam import DBTMELDUNGEN
 
 PART = "\t"
 WEG = "'\n"
@@ -9,7 +9,7 @@ kTitel = "title"
 kUpdatet = "updated_parsed"
 
 
-def speichern(titel, meldung, link, cursor, quelle, zeit):
+def speichern(titel, inhalt, link, cursor, quelle, zeit):
     """
     Hash berechnen,
     Titel, Meldung und Hash eintragen
@@ -27,16 +27,16 @@ def speichern(titel, meldung, link, cursor, quelle, zeit):
         _type_: False, wenn Fehler, sonst True
     """
     logging.debug("bearbeiten:speichern:Start...")
-    # titel und meldung d�rfe kein >'< enthalten
+    # titel und inhalt dürfen kein >'< enthalten
     titel = titel.replace("'", "").strip()
-    meldung = meldung.replace("'", "").strip()
-    hwert = hash(titel + meldung)
+    inhalt = inhalt.replace("'", "").strip()
+    hwert = hash(titel + inhalt)
     try:
         sql = "INSERT INTO %s (hash,titel,meldung) VALUES ('%d','%s', '%s');" % (
             DBTMELDUNGEN,
             hwert,
             titel,
-            meldung,
+            inhalt,
         )
         # logging.debug(sql)
         cursor.execute(sql)
@@ -79,18 +79,22 @@ def bearbeiten(auftrag, db):
             data = ""
             i = 0
             ok = hatZeit = hatMeldung = hatTitel = False
-            titel = meldung = link = AuftragQuelle = AuftragZeit = ""
+            titel = inhalt = link = AuftragQuelle = AuftragZeit = ""
             for line in file:
                 teile = line.partition(PART)
                 logging.debug(teile)
                 key = teile[0].strip(WEG)
                 val = teile[2].strip(WEG)
+                # Meldungen bestehen aus
+                # einem Titel und
+                # dem als summary bezeichneten Inhalt und
+                # weiteren Angaben
                 match key:
                     case "-----":
-                        # neuer Eintrag beginnt
+                        # neuer Eintrag beginnt, zuerst den alten speichern
                         if hatTitel:
                             ok = speichern(
-                                titel, meldung, link, cursor, AuftragQuelle, AuftragZeit
+                                titel, inhalt, link, cursor, AuftragQuelle, AuftragZeit
                             )
                             if not ok:
                                 logging.warning(f"Fehler bein Speichern von {titel}")
@@ -102,7 +106,7 @@ def bearbeiten(auftrag, db):
                         titel = val
                         hatTitel = True
                     case "summary":
-                        meldung = val
+                        inhalt = val
                         hatMeldung = True
                     case "updated_parsed":
                         pass

@@ -1,9 +1,0 @@
-DBHOST = "localhost"
-DBNAME = "news"
-DBPORT = 3306
-DBUSER = "news"
-DBPWD = "news"
-DBTBB = "blackboard"
-DBTSTOP = "stop"
-DBTMELDUNGEN = "meldungen"  # unbearbetete Meldungen
-DBTDATEN = "daten"  # bearbeitete Meldungen

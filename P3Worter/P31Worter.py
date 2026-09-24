@@ -4,29 +4,39 @@
 #    Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
 #    https://creativecommons.org/licenses/by-nc-sa/4.0/
 
+# Wichtig:
+# export PYTHONPATH="../NMLlib"
+#
+
 from dbparam import DBTBB, DBHOST, DBNAME, DBUSER, DBPORT, DBPWD
 import mysql.connector
 import logging, argparse
 from dbroutinen import zurücksetzenDaten, dbcreate
 from wzahlen import wzahlen
 
-TITEL = "P3Worter"
-MACHT = "Einzelwörter und Wortfolgen aus Daten"
+TITLE = "P3Worter"
+DESCRIPTION = """holt die um Stoppwörter bereinigten Meldungen aus der Datenbank 
+und zerlegt sie in Token (Einzelwörter oder n-Wortfolgen, 
+gesteuert durch Parameter beim Aufruf). Zählt die Types 
+und schreibt die Summen für jeden Type in die passende Tabelle."""
+
+TITEL = TITLE
+MACHT = DESCRIPTION
 ZURÜCK = False
 
 
-def main():
+def main(lWortKette):
     try:
         db = mysql.connector.connect(
             host=DBHOST, db=DBNAME, user=DBUSER, port=DBPORT, password=DBPWD
         )  # + ";ConvertZeroDateTime=True;",
         if ZURÜCK:
             logging.info("Zurücksetzen")
-            zurücksetzenDaten("P3Worter", db, LKETTE)
+            zurücksetzenDaten("P3Worter", db, lWortKette)
             logging.info("...zurückgesetzt, Ende")
             return 0
 
-        TITEL = f"P3{LKETTE}Worter"
+        TITEL = f"P3{lWortKette}Worter"
         logging.info(f"Start {TITEL} für max. {MAXZEIT} Sekunden")
 
         with db.cursor() as cursor:
@@ -40,7 +50,7 @@ def main():
         Auftrag = Aufträge[0]
         ID = Auftrag[0]
         logging.info(f"Start {TITEL} Auftrag {ID}")
-        ok = wzahlen(db, LKETTE, MAXZEIT)
+        ok = wzahlen(db, lWortKette, MAXZEIT)
         if ok:
             with db.cursor() as cursor:
                 SQL = f"delete from {DBTBB} where programm='{TITEL}';"
@@ -74,7 +84,9 @@ def main():
 if __name__ == "__main__":
     import sys
 
-    parser = argparse.ArgumentParser(prog=TITEL, description=MACHT)
+global Dbg
+LOG_FORMAT = "%(levelname)s: %(message)s"
+parser = argparse.ArgumentParser(prog=TITEL, description=MACHT)
     parser.add_argument(
         "-v", "--verbose", dest="pVerbose", action="store_true", help="Debug-Ausgabe"
     )
@@ -108,9 +120,11 @@ if __name__ == "__main__":
     ZURÜCK = arguments.pZurck
     Dbg = arguments.pVerbose
     if Dbg:
-        logging.basicConfig(level=logging.DEBUG)
+        LOG_LEVEL = logging.DEBUG
     else:
-        logging.basicConfig(level=logging.INFO)
-    logging.info("Start %s: Länge %d, für max. %d s" % (TITEL, LKETTE, MAXZEIT))
+    LOG_LEVEL = logging.INFO
+logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL)
 
-    sys.exit(main())
+logging.info("Start %s: Länge %d, für max. %d s" % (TITEL, LKETTE, MAXZEIT))
+
+sys.exit(main(LKETTE))

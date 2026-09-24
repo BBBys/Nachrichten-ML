@@ -79,50 +79,50 @@ def wzahlen(Datenbank, lkette, maxzeit):
     return ok
 
 
-def w1zahlen(c, t, mld):
-    for w in mld.split():
-        sql = f"SELECT anzahl FROM {t} where wort='{w}';"
-        c.execute(sql)
-        nw = c.fetchone()
+def w1zahlen(writec, tabelle, mld):
+    for wort in mld.split():
+        sql = f"SELECT anzahl FROM {tabelle} where wort='{wort}';"
+        writec.execute(sql)
+        nw = writec.fetchone()
         if nw is None:
-            sql = f"insert into {t} (wort) values ('{w}');"
+            sql = f"insert into {tabelle} (wort) values ('{wort}');"
         else:
-            sql = f"update {t} set anzahl = {nw[0]+1} where wort like '{w}';"
-        c.execute(sql)
+            sql = f"update {tabelle} set anzahl = {nw[0]+1} where wort like '{wort}';"
+        writec.execute(sql)
     return True
 
 
-def w2zahlen(c, t, mld):
+def w2zahlen(writec, t, mld):
     w1 = None
     for w2 in mld.split():
         if w1 is not None:
             w = w1 + " " + w2
             sql = f"SELECT anzahl FROM {t} where wort='{w}';"
-            c.execute(sql)
-            nw = c.fetchone()
+            writec.execute(sql)
+            nw = writec.fetchone()
             if nw is None:
                 sql = f"insert into {t} (wort) values ('{w}');"
             else:
                 sql = f"update {t} set anzahl = {nw[0]+1} where wort like '{w}';"
-            c.execute(sql)
+            writec.execute(sql)
         w1 = w2
     return True
 
 
-def w3zahlen(c, t, mld):
+def w3zahlen(writec, t, mld):
     w1 = None
     w2 = None
     for w3 in mld.split():
         if w1 is not None:
             w = w1 + " " + w2 + " " + w3
             sql = f"SELECT anzahl FROM {t} where wort='{w}';"
-            c.execute(sql)
-            nw = c.fetchone()
+            writec.execute(sql)
+            nw = writec.fetchone()
             if nw is None:
                 sql = f"insert into {t} (wort) values ('{w}');"
             else:
                 sql = f"update {t} set anzahl = {nw[0]+1} where wort like '{w}';"
-            c.execute(sql)
+            writec.execute(sql)
         w1 = w2
         w2 = w3
     return True

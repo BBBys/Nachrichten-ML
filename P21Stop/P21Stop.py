@@ -3,6 +3,9 @@
 #
 #  P21Stop.py
 #
+# Wichtig:
+# export PYTHONPATH="../NMLlib"
+#
 from dbparam import DBTBB, DBHOST, DBNAME, DBUSER, DBPORT, DBPWD
 
 # from bearbeiten import bearbeiten
@@ -14,7 +17,11 @@ from kopieren import kopieren
 from dbroutinen import zurücksetzenDaten
 
 STOPPFILE = ""
-TITEL = "P21Stop"
+TITLE = "P21Stop"
+DESCRIPTION = """Meldungen aufräumen, Titel und Meldung zusammenfassen, 
+Sonderzeichen und Stoppwörter entfernen,
+in Kleinschreibung umwandeln, 
+in Tabelle daten speichern"""
 ZURÜCK = False
 
 
@@ -25,29 +32,29 @@ def main():
         )  # + ";ConvertZeroDateTime=True;",
         if ZURÜCK:
             logging.info("Zurücksetzen")
-            zurücksetzenDaten(TITEL, db)
+            zurücksetzenDaten(TITLE, db)
             logging.info("...Ende")
             return 11
 
         if not os.path.exists(STOPPFILE):
             raise Exception(f"Stoppfile {STOPPFILE} fehlt")
         with db.cursor() as cursor:
-            SQL = f"SELECT id FROM {DBTBB} WHERE programm='{TITEL}';"
+            SQL = f"SELECT id FROM {DBTBB} WHERE programm='{TITLE}';"
             logging.debug(SQL)
-            r=cursor.execute(SQL)
+            r = cursor.execute(SQL)
             logging.debug(f"Result: {r}")
             Aufträge = cursor.fetchall()
             logging.debug(f"Aufträge: {Aufträge}")
             logging.debug("%d Auftrag-Records" % len(Aufträge))
 
             if len(Aufträge) < 1:  # es muss Records geben
-                logging.info("für %s liegt nichts vor" % TITEL)
+                logging.info("für %s liegt nichts vor" % TITLE)
                 return 0
 
         Auftrag = Aufträge[0]
         logging.debug(Auftrag)
         ID = Auftrag[0]
-        logging.info(f"Start {TITEL} Auftrag {ID}")
+        logging.info(f"Start {TITLE} Auftrag {ID}")
         ok = verdichten(db)
         if ok:
             db.commit()
@@ -56,14 +63,14 @@ def main():
             if ok:
                 with db.cursor() as cursor:
                     if nRest < 1:  # alles verarbeitet
-                        SQL = f"delete from {DBTBB} where programm='{TITEL}';"
+                        SQL = f"delete from {DBTBB} where programm='{TITLE}';"
                         cursor.execute(SQL)
                         SQL = f"insert into {DBTBB} (programm) values ('P31Worter');"
                         logging.debug(SQL)
                         cursor.execute(SQL)
                     else:
                         logging.warning(f"es verbleiben noch {nRest} Meldungen")
-                        #SQL = insert into DBTBB nicht notwendig
+                        # SQL = insert into DBTBB nicht notwendig
                 db.commit()
     except mysql.connector.errors.Error as e:
         logging.error(f"MySQL Error\n{e}")
@@ -85,12 +92,19 @@ def main():
 
 if __name__ == "__main__":
     import sys
+    import nltk
 
-    parser = argparse.ArgumentParser(
-        prog=TITEL,
-        description="Meldungen aufräumen, Stoppliste anwenden, in daten übertragen",
+    nltk.download("stopwords")
+    # from nltk.corpus import stopwords
+    # print(stopwords.words('german'))
+    sys.exit(0)
+
+    global Dbg
+    LOG_FORMAT = "%(levelname)s: %(message)s"
+    parser = argparse.ArgumentParser(prog=TITLE, description=DESCRIPTION)
+    parser.add_argument(
+        dest="pStopp", help="Datei mit Stoppwörtern,\nüblich /usr/local/news/stop.txt"
     )
-    parser.add_argument(dest="pStopp", help="Datei mit Stoppwörtern,\nüblich /usr/local/news/stop.txt")
     parser.add_argument(
         "-m",
         "--max",
@@ -116,9 +130,11 @@ if __name__ == "__main__":
     MAXMLD = int(arguments.pMaxMld)
     STOPPFILE = arguments.pStopp
     if Dbg:
-        logging.basicConfig(level=logging.DEBUG)
+        LOG_LEVEL = logging.DEBUG
     else:
-        logging.basicConfig(level=logging.INFO)
-    logging.info(f"Start {TITEL} mit Stoppfile {STOPPFILE}, max. {MAXMLD}")
+        LOG_LEVEL = logging.INFO
+    logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL)
+
+    logging.info(f"Start {TITLE} mit Stoppfile {STOPPFILE}, max. {MAXMLD}")
 
     sys.exit(main())
