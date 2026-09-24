@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-#  P2Eintragen.py
-#
+#    P2Eintragen.py
+#    Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
+#    https://creativecommons.org/licenses/by-nc-sa/4.0/
+
 from dbparam import *
 from bearbeiten import bearbeiten
 from dbroutinen import dbcreate
@@ -35,7 +36,7 @@ def main():
         ID = Auftrag[0]
         Datei = Auftrag[1]
         if os.path.exists(Datei):
-            logging.info(f"Start Bearbeitung ID {ID}")
+            logging.info(f"Start Bearbeitung ID {ID} von Datei {Datei}")
             ok = bearbeiten(Auftrag, mydb)
             if not ok:
                 logging.error(f"bearbeiten von ID {ID}\n{Auftrag}")

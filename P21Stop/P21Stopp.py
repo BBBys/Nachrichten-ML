@@ -57,15 +57,29 @@ def main():
             if ok:
                 with db.cursor() as cursor:
                     if nRest < 1:  # alles verarbeitet
+                        # Auftrag für STOPP löschen, Aufträge für P3...Worter erzeugen
                         SQL = f"delete from {DBTBB} where programm='{TITEL}';"
                         cursor.execute(SQL)
+
+                        # 1
                         SQL = f"insert into {DBTBB} (programm) values ('P31Worter');"
                         logging.debug(SQL)
                         cursor.execute(SQL)
-                    else:
+                        # 2
+                        SQL = f"insert into {DBTBB} (programm) values ('P33Worter');"
+                        logging.debug(SQL)
+                        cursor.execute(SQL)
+                        # 3
+                        SQL = f"insert into {DBTBB} (programm) values ('P35Worter');"
+                        logging.debug(SQL)
+                        cursor.execute(SQL)
+                    else: #if nRest<1
+                        # noch nicht alles verarbeitet, Auftrag für STOPP behalten
                         logging.warning(f"es verbleiben noch {nRest} Meldungen")
                         #SQL = insert into DBTBB nicht notwendig
-                db.commit()
+                    #endif/else
+                    db.commit()
+                # end with cursor
     except mysql.connector.errors.Error as e:
         logging.error(f"MySQL Error\n{e}")
         match e.errno:

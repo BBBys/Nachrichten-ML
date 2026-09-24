@@ -120,7 +120,7 @@ def Bearbeite(Auftrag, Pfad):
         case "Tagesschau":
             ok = rsslesen(UrlTAGESSCHAU, filename)
         case _:
-            raise Exception("RSS-Quelle %s unkekannt" % (quelle))
+            raise Exception("RSS-Quelle %s unbekannt" % (quelle))
     return (ok, quelle, filename)
 
 
@@ -153,14 +153,14 @@ def main(abstand, ausgabe):
         Auftrag = Aufträge[0]  # nur den ersten
         logging.debug(Auftrag)
         zeit = Auftrag[2]
-        logging.info(f"{TITEL}: Start Auftrag {Auftrag[0]}")
+        logging.info(f"{TITEL}: Start Bearbeitung ID {Auftrag[0]}")
         if zeit < maxdate:
             (ok, ziel, datei) = Bearbeite(Auftrag, ausgabe)
             if ok:
                 dbupdate(ziel, datei, mydb)
                 rtncode=0   
         else:
-            logging.info("noch zu früh für %s" % Auftrag[1])
+            logging.info("noch zu früh für %s (warten bis %s)" % (Auftrag[1], maxdate))
             rtncode=1
 
     except mysql.connector.errors.ProgrammingError as e:
@@ -210,5 +210,5 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
-    logging.info("Start %s: RSS --> %s" % (TITEL, pfad))
+    logging.info("Start %s: Abstand %d Stunden, RSS --> %s" % (TITEL, Abstand, pfad))
     sys.exit(main(Abstand, pfad))

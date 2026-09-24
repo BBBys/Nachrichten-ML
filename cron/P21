@@ -1,0 +1,5 @@
+#!/bin/sh
+echo "=====     Start P21     =================================================================="
+/usr/local/bin/news/P21Stopp/.env/bin/python /usr/local/bin/news/P21Stopp/P21Stopp.py /usr/local/bin/news/P21Stopp/stopp.txt 
+#
+echo "=====     Ende  P21     =================================================================="

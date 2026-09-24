@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "=====     Start P33     =================================================================="
+/usr/local/bin/news/P3Worter/.env/bin/python /usr/local/bin/news/P3Worter/P31Worter.py -t 300 -l 3 
+echo "=====     Ende  P33     =================================================================="

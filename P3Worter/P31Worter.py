@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-#  P31Worter.py
-#
+#    P31Worter.py
+#    Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
+#    https://creativecommons.org/licenses/by-nc-sa/4.0/
+
 from dbparam import DBTBB, DBHOST, DBNAME, DBUSER, DBPORT, DBPWD
 import mysql.connector
 import logging, argparse
 from dbroutinen import zurücksetzenDaten, dbcreate
 from wzahlen import wzahlen
 
-TITLE = "P3Worter"
+TITEL = "P3Worter"
 MACHT = "Einzelwörter und Wortfolgen aus Daten"
 ZURÜCK = False
 
@@ -73,7 +74,7 @@ def main():
 if __name__ == "__main__":
     import sys
 
-    parser = argparse.ArgumentParser(prog=TITLE, description=MACHT)
+    parser = argparse.ArgumentParser(prog=TITEL, description=MACHT)
     parser.add_argument(
         "-v", "--verbose", dest="pVerbose", action="store_true", help="Debug-Ausgabe"
     )
@@ -110,4 +111,6 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
+    logging.info("Start %s: Länge %d, für max. %d s" % (TITEL, LKETTE, MAXZEIT))
+
     sys.exit(main())

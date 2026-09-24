@@ -1,5 +1,7 @@
 #!/bin/sh
+echo "=====     Start P0     =================================================================="
 #Spiegel
 /usr/local/bin/news/P0Abrufen/.env/bin/python /usr/local/bin/news/P0Abrufen/P0Abrufen.py -a 12 /var/local/news/ 
 #Tagesschau
 /usr/local/bin/news/P0Abrufen/.env/bin/python /usr/local/bin/news/P0Abrufen/P0Abrufen.py -a 12 /var/local/news/ 
+echo "=====     Ende  P0     =================================================================="
