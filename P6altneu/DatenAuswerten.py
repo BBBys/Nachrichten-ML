@@ -71,8 +71,8 @@ def analyze(file_path):
     print(f"\n{DAYSRECENT} Tage seit {recentcutoff}")
     print(f"{tokenGesamt}\tToken gesamt")
     print(f"{tokenNeu}\taktuelle Token ({(100.0*tokenNeu)//tokenGesamt} % von allen)")
+    print(f"von {len(allkeys)} Types sind {len(results)} signifikent neu erschienen")
     print(
-        f"von {len(allkeys)} Types sind {len(results)} signifikent neu erschienen"
+        f"Top Types (mindestens {MINCOUNT} x aufgetreten, Einzigartigkeit > {MINSCORE}):"
     )
-    print(f"Top Types (mindestens {MINCOUNT} x aufgetreten, Einzigartigkeit > {MINSCORE}):")
     return results

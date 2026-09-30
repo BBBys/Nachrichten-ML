@@ -18,7 +18,15 @@ im Abstand von min. 5 Stunden und Speicherung von Titel, Kurzfassung, Link zur V
 * für gesamten Beobachtungszeitraum und die letzte Woche
 
 # Der Ablauf
-
+## Aufruffolge
+Sequenz|Programm|wartet |triggert
+---|---|---|---
+1|P0Abrufen|nichts|P2Eintragen (Datei). Fallback: P0Abrufen (Spiegel) und P0Abrufen (Tagesschau)
+2|P2Eintragen|P2Eintragen (Datei)|P21Stop
+3|P21Stop|P21Stop|P31Worter,P33Worter,P35Worter
+4|P3nWorter|P3nWorter|P4Statistik nur wenn fertig
+5|P4Statistik|P4Statistik, wenn nicht erzwungen|???
+6|??? P5|P5|P6
 ## 0. P0Abrufen
 * liest Auftrag *P0Arufen* von Blackboard
   * ergibt Record mit SPIEGEL oder TAGESSCHAU und Datum/Uhrzeit

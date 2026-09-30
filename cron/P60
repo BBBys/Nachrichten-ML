@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "=====     Start P6     =================================================================="
+/usr/local/bin/news/P6altneu/.env/bin/python /usr/local/bin/news/P6altneu/P6altneu.py -fsa 
+echo "=====     Ende  P6     =================================================================="

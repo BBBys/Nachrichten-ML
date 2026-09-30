@@ -38,10 +38,11 @@ def wzahlen(Datenbank, lkette, maxzeit):
             startzeit = time.time()
             for dat in daten:
                 # logging.debug(dat)
-                iMld = dat[0]
-                mld = dat[1]
+                iMld = dat[0] #zeigerRoh
+                mld = dat[1] #meldung
                 # logging.debug(f"i={iMld},Mld >{mld}<")
                 match lkette:
+                    #eine Meldung zählen
                     case 1:
                         ok = w1zahlen(writeCursor, DBTW1, mld)
                     # if ok:ok=w2zahlen(writeCursor,DBTW2, mld)
@@ -50,14 +51,17 @@ def wzahlen(Datenbank, lkette, maxzeit):
                     # if ok:ok=w4zahlen(writeCursor,DBTW4, mld)
                     case 5:
                         ok = w5zahlen(writeCursor, DBTW5, mld)
-                if ok:
+                if ok: #fehlerfrei gezählt
                     sql = f"update {DBTDATEN} set {worttyp} = 1 where zeigerRoh={iMld};"
                     writeCursor.execute(sql)
                     Datenbank.commit()
-                stoppzeit = time.time()
+                    stoppzeit = time.time()
+                #Rechnzeitlimit?
                 if (stoppzeit - startzeit) > maxzeit:
                     logging.info(f"Maximale Zeit {maxzeit} s erreicht")
-                    return False
+                    return False #noch nicht zuende
+            # for dat in daten
+        #with cursors
     except mysql.connector.errors.Error as e:
         logging.error(f"w*zahlen: MySQL Error {e.errno}\n{e}")
         match e.errno:
@@ -76,53 +80,54 @@ def wzahlen(Datenbank, lkette, maxzeit):
                 print(e.__dict__)
                 raise e
         return False
-    return ok
-
-
-def w1zahlen(writec, tabelle, mld):
-    for wort in mld.split():
-        sql = f"SELECT anzahl FROM {tabelle} where wort='{wort}';"
-        writec.execute(sql)
-        nw = writec.fetchone()
-        if nw is None:
-            sql = f"insert into {tabelle} (wort) values ('{wort}');"
-        else:
-            sql = f"update {tabelle} set anzahl = {nw[0]+1} where wort like '{wort}';"
-        writec.execute(sql)
+    #Try/except
     return True
 
 
-def w2zahlen(writec, t, mld):
+def w1zahlen(c, t, mld):
+    for w in mld.split():
+        sql = f"SELECT anzahl FROM {t} where wort='{w}';"
+        c.execute(sql)
+        nw = c.fetchone()
+        if nw is None:
+            sql = f"insert into {t} (wort) values ('{w}');"
+        else:
+            sql = f"update {t} set anzahl = {nw[0]+1} where wort like '{w}';"
+        c.execute(sql)
+    return True
+
+
+def w2zahlen(c, t, mld):
     w1 = None
     for w2 in mld.split():
         if w1 is not None:
             w = w1 + " " + w2
             sql = f"SELECT anzahl FROM {t} where wort='{w}';"
-            writec.execute(sql)
-            nw = writec.fetchone()
+            c.execute(sql)
+            nw = c.fetchone()
             if nw is None:
                 sql = f"insert into {t} (wort) values ('{w}');"
             else:
                 sql = f"update {t} set anzahl = {nw[0]+1} where wort like '{w}';"
-            writec.execute(sql)
+            c.execute(sql)
         w1 = w2
     return True
 
 
-def w3zahlen(writec, t, mld):
+def w3zahlen(c, t, mld):
     w1 = None
     w2 = None
     for w3 in mld.split():
         if w1 is not None:
             w = w1 + " " + w2 + " " + w3
             sql = f"SELECT anzahl FROM {t} where wort='{w}';"
-            writec.execute(sql)
-            nw = writec.fetchone()
+            c.execute(sql)
+            nw = c.fetchone()
             if nw is None:
                 sql = f"insert into {t} (wort) values ('{w}');"
             else:
                 sql = f"update {t} set anzahl = {nw[0]+1} where wort like '{w}';"
-            writec.execute(sql)
+            c.execute(sql)
         w1 = w2
         w2 = w3
     return True

@@ -6,4 +6,4 @@ argparse
 #scikit-learn
 #scipy==1.15.2
 #threadpoolctl==3.5.0
-
+black

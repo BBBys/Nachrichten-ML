@@ -4,39 +4,39 @@
 #    Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
 #    https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-# Wichtig:
-# export PYTHONPATH="../NMLlib"
-#
-
 from dbparam import DBTBB, DBHOST, DBNAME, DBUSER, DBPORT, DBPWD
 import mysql.connector
 import logging, argparse
 from dbroutinen import zurücksetzenDaten, dbcreate
 from wzahlen import wzahlen
 
-TITLE = "P3Worter"
-DESCRIPTION = """holt die um Stoppwörter bereinigten Meldungen aus der Datenbank 
-und zerlegt sie in Token (Einzelwörter oder n-Wortfolgen, 
-gesteuert durch Parameter beim Aufruf). Zählt die Types 
-und schreibt die Summen für jeden Type in die passende Tabelle."""
-
-TITEL = TITLE
-MACHT = DESCRIPTION
+TITEL = "P3Worter"
+MACHT = "Einzelwörter und Wortfolgen aus Daten"
 ZURÜCK = False
 
 
-def main(lWortKette):
+def raspberry_temperatur_anzeigen():
+    try:
+        with open("/sys/class/thermal/thermal_zone0/temp", encoding="ascii") as temperatur_datei:
+            temperatur = int(temperatur_datei.read().strip()) / 1000
+        logging.info("Raspberry-Temperatur: %.1f °C", temperatur)
+    except (OSError, ValueError) as e:
+        logging.debug("Raspberry-Temperatur nicht verfügbar: %s", e)
+
+
+def main():
+    raspberry_temperatur_anzeigen()
     try:
         db = mysql.connector.connect(
             host=DBHOST, db=DBNAME, user=DBUSER, port=DBPORT, password=DBPWD
         )  # + ";ConvertZeroDateTime=True;",
         if ZURÜCK:
             logging.info("Zurücksetzen")
-            zurücksetzenDaten("P3Worter", db, lWortKette)
+            zurücksetzenDaten("P3Worter", db, LKETTE)
             logging.info("...zurückgesetzt, Ende")
             return 0
 
-        TITEL = f"P3{lWortKette}Worter"
+        TITEL = f"P3{LKETTE}Worter"
         logging.info(f"Start {TITEL} für max. {MAXZEIT} Sekunden")
 
         with db.cursor() as cursor:
@@ -50,7 +50,7 @@ def main(lWortKette):
         Auftrag = Aufträge[0]
         ID = Auftrag[0]
         logging.info(f"Start {TITEL} Auftrag {ID}")
-        ok = wzahlen(db, lWortKette, MAXZEIT)
+        ok = wzahlen(db, LKETTE, MAXZEIT)
         if ok:
             with db.cursor() as cursor:
                 SQL = f"delete from {DBTBB} where programm='{TITEL}';"
@@ -61,6 +61,8 @@ def main(lWortKette):
             logging.info(f"Auftrag {ID} erfolgreich beendet")
         else:
             logging.info(f"Auftrag {ID} nicht beendet")
+        raspberry_temperatur_anzeigen()
+
     except mysql.connector.errors.Error as e:
         logging.error(f"MySQL Error\n{e}")
         match e.errno:
@@ -84,9 +86,7 @@ def main(lWortKette):
 if __name__ == "__main__":
     import sys
 
-global Dbg
-LOG_FORMAT = "%(levelname)s: %(message)s"
-parser = argparse.ArgumentParser(prog=TITEL, description=MACHT)
+    parser = argparse.ArgumentParser(prog=TITEL, description=MACHT)
     parser.add_argument(
         "-v", "--verbose", dest="pVerbose", action="store_true", help="Debug-Ausgabe"
     )
@@ -120,11 +120,9 @@ parser = argparse.ArgumentParser(prog=TITEL, description=MACHT)
     ZURÜCK = arguments.pZurck
     Dbg = arguments.pVerbose
     if Dbg:
-        LOG_LEVEL = logging.DEBUG
+        logging.basicConfig(level=logging.DEBUG)
     else:
-    LOG_LEVEL = logging.INFO
-logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL)
+        logging.basicConfig(level=logging.INFO)
+    logging.info("Start %s: Länge %d, für max. %d s" % (TITEL, LKETTE, MAXZEIT))
 
-logging.info("Start %s: Länge %d, für max. %d s" % (TITEL, LKETTE, MAXZEIT))
-
-sys.exit(main(LKETTE))
+    sys.exit(main())
