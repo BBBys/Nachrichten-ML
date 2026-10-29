@@ -6,28 +6,34 @@ RSS-Feeds mit ML-Verfahren bearbeiten. In dieser Version alles in Python
 ![image](151214.jpeg)
 
 ## Quellen der Nachrichten
+
 * :newspaper: SPIEGEL
 * :tv: Tagesschau
 
 ## Abfrage
+
 im Abstand von min. 5 Stunden und Speicherung von Titel, Kurzfassung, Link zur Vollmeldung
 
 ### Wort- und Wortfolgen-Häufigkeiten
+
 * 1-, 3- und 5-Wort-Ketten
 * nach Ausblenden von :stop_sign: Stopp-Wörtern
 * für gesamten Beobachtungszeitraum und die letzte Woche
 
 # Der Ablauf
+
 ## Aufruffolge
-Sequenz|Programm|wartet |triggert
+
+Sequenz|Programm|wartet|triggert
 ---|---|---|---
 1|P0Abrufen|nichts|P2Eintragen (Datei). Fallback: P0Abrufen (Spiegel) und P0Abrufen (Tagesschau)
 2|P2Eintragen|P2Eintragen (Datei)|P21Stop
 3|P21Stop|P21Stop|P31Worter,P33Worter,P35Worter
-4|P3nWorter|P3nWorter|P4Statistik nur wenn fertig
-5|P4Statistik|P4Statistik, wenn nicht erzwungen|???
-6|??? P5|P5|P6
+4|P3nWorter|P3nWorter|??? nur wenn fertig
+5|??? P5|P5|P6
+
 ## 0. P0Abrufen
+
 * liest Auftrag *P0Arufen* von Blackboard
   * ergibt Record mit SPIEGEL oder TAGESSCHAU und Datum/Uhrzeit
   * wenn nicht: diese 2 Records werden erzeugt, Exit
@@ -39,7 +45,9 @@ Sequenz|Programm|wartet |triggert
 * schreibt Auftrag für *P2Eintragen* und Dateinamen in Blackboard
 * schreibt neuen Auftrag für *P0Abrufen* und Zeit in Blackboard
 * löscht bearbeiteten Record aus Blackboard
-## 1.
+
+## 1
+
 ist irgendwo verloren :dizzy_face: gegangen
 
 ## 2. P2Eintragen
@@ -56,51 +64,59 @@ ist irgendwo verloren :dizzy_face: gegangen
   * Stopp-Wörter werden erst im nächsten Schritt behandelt
 * schreibt Meldungen in Datenbank
 
-## 3. P21Stop 
+## 3. P21Stop
 
 * löscht doppelte Meldungen
 * Titel und Meldung zusammenfassen
 * Sonderzeichen und Stoppwörter entfernen,
-* in Kleinschreibung umwandeln, 
+* in Kleinschreibung umwandeln,
 * in Tabelle daten speichern
 
 Dabei werden ein paar Umwandlungen gemacht, z.B.
 
 aus|wird
 ---|---
-&amp;| und 
+&amp;|und
 d.h.|das heisst
 z.b.|zum beispiel
 ß|ss
-    
+
 ## 4. Types und Anzahl erfassen
 
 ### P3-Programme
 
-Jedes Programm 
-* holt die um Stoppwörter bereinigten Meldungen aus der Datenbank und 
-* zerlegt sie in Token 
+Jedes Programm
+
+* holt die um Stoppwörter bereinigten Meldungen aus der Datenbank und
+* zerlegt sie in Token
   * Einzelwörter oder n-Wortfolgen, gesteuert durch Parameter
-* Zählt die Types 
+* Zählt die Types
 * schreibt die Summen für jeden Type in die passende Tabelle
 
+## P4Statistik
+
+ist überholt
+
 ## 6. P6altneu
+
 * vergleicht die Häufigkeit von Wörtern in allen Aufzeichnungen mit der in den letzten x Tagen (x z,B. 7)
 * listet auf, was signifikant häufiger ist
+
 ## NMLlib
 
 ... fasst zentrale Module zusammen
 Einbinden mit ```export PYTHONPATH="../NMLlib"```
 
 # To Do
+
 [ ] ML-Verfahren für P6altneu einsetzen
 
 # Lizenz
 
-Nachrichten-ML  © 2025-2026 by Dr. Burkhard Borys 
-is licensed under CC BY-NC-ND 4.0. 
-To view a copy of this license, visit 
-https://creativecommons.org/licenses/by-nc-nd/4.0/
+Nachrichten-ML  © 2025-2026 by Dr. Burkhard Borys
+is licensed under CC BY-NC-ND 4.0.
+To view a copy of this license, visit
+<https://creativecommons.org/licenses/by-nc-nd/4.0/>
 
 # Quellen
 

@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-#  P6altneu.py
-#    Nachrichten-ML © 2025 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
-#    https://creativecommons.org/licenses/by-nc-sa/4.0/
+#   @file P6altneu.py
+#   @brief Aufkommende Trends endecken, indem Meldungen aus der Datenbank gesammelt und ausgewertet werden
+#   @version V2.1
+#   @date 29 Okt 2026 2025
+#   @author Dr. Burkhard Borys, Zeller Ring 15, 34246 Vellmar, Deutschland
+#   @copyright  Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
+#   https://creativecommons.org/licenses/by-nc-sa/4.0/
+#   
+
 from dbparam import DBTBB, DBHOST, DBNAME, DBUSER, DBPORT, DBPWD
 import mysql.connector
 import logging
@@ -12,7 +17,8 @@ from DatenSortieren import DatenSortieren
 from DatenAuswerten import analyze
 
 TITEL = "P6altneu"
-
+MACHT="Aufkommende Trends endecken, indem Meldungen aus der Datenbank gesammelt und ausgewertet werden"
+VERSION = "V2.1"
 
 def main(Datei, Sichern, Auswerten, auchOhneAuftrag=False):
     try:
@@ -70,9 +76,7 @@ def main(Datei, Sichern, Auswerten, auchOhneAuftrag=False):
 if __name__ == "__main__":
     import argparse, sys
 
-    parser = argparse.ArgumentParser(
-        prog=TITEL, description="Statistik über Wörter und Trends"
-    )
+    parser = argparse.ArgumentParser(prog=TITEL, description=MACHT,epilog=VERSION)
     parser.add_argument(
         "-v", "--verbose", dest="pVerbose", action="store_true", help="Debug-Ausgabe"
     )
@@ -106,9 +110,15 @@ if __name__ == "__main__":
     DATEI = arguments.pDatei
     SICHERN = arguments.pSichern
     AUSWERTEN = arguments.pAuswertenn
+
+    LOG_FORMAT = "%(asctime)s %(name)s %(levelname)s %(message)s"
+    LOG_DATEFMT = "%Y-%m-%d %H:%M:%S"
     if Dbg:
-        logging.basicConfig(level=logging.DEBUG)
+        LOG_LEVEL = logging.DEBUG
     else:
-        logging.basicConfig(level=logging.INFO)
-    logging.info(f"Start {TITEL}")
+        LOG_LEVEL = logging.INFO
+
+    logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL, datefmt=LOG_DATEFMT)
+
+    logging.info("%s %s" % (TITEL, VERSION))
     sys.exit(main(DATEI, SICHERN, AUSWERTEN, FORCE))

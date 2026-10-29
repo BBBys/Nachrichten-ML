@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#    P31Worter.py
-#    Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
-#    https://creativecommons.org/licenses/by-nc-sa/4.0/
+#   @file P31Worter.py
+#   @brief Wörter oder Wortfolgen (Types: n-Gramme) zählen
+#   @version V2.1
+#   @date 29 Okt 2026 2025
+#   @author Dr. Burkhard Borys, Zeller Ring 15, 34246 Vellmar, Deutschland
+#   @copyright  Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
+#   https://creativecommons.org/licenses/by-nc-sa/4.0/
+#   
 
 from dbparam import DBTBB, DBHOST, DBNAME, DBUSER, DBPORT, DBPWD
 import mysql.connector
@@ -11,6 +16,7 @@ from dbroutinen import zurücksetzenDaten, dbcreate
 from wzahlen import wzahlen
 
 TITEL = "P3Worter"
+VERSION = "V2.1"
 MACHT = "Einzelwörter und Wortfolgen aus Daten"
 ZURÜCK = False
 
@@ -55,7 +61,9 @@ def main():
             with db.cursor() as cursor:
                 SQL = f"delete from {DBTBB} where programm='{TITEL}';"
                 cursor.execute(SQL)
-                SQL = f"insert into {DBTBB} (programm) values ('P4Statistik');"
+                SQL = f"insert into {DBTBB} (programm,parameter) values ('P4Statistik', '{LKETTE}');"+\
+                        f"insert into {DBTBB} (programm,parameter) values  ('P6altneu', '{LKETTE}');"
+                logging.debug(SQL)
                 cursor.execute(SQL)
             db.commit()
             logging.info(f"Auftrag {ID} erfolgreich beendet")
@@ -86,7 +94,7 @@ def main():
 if __name__ == "__main__":
     import sys
 
-    parser = argparse.ArgumentParser(prog=TITEL, description=MACHT)
+    parser = argparse.ArgumentParser(prog=TITEL, description=MACHT,epilog=VERSION)
     parser.add_argument(
         "-v", "--verbose", dest="pVerbose", action="store_true", help="Debug-Ausgabe"
     )
@@ -119,10 +127,14 @@ if __name__ == "__main__":
     MAXZEIT = int(arguments.pMaxZeit)
     ZURÜCK = arguments.pZurck
     Dbg = arguments.pVerbose
+
+    LOG_FORMAT = "%(asctime)s %(name)s %(levelname)s %(message)s"
+    LOG_DATEFMT = "%Y-%m-%d %H:%M:%S"
     if Dbg:
-        logging.basicConfig(level=logging.DEBUG)
+        LOG_LEVEL = logging.DEBUG
     else:
-        logging.basicConfig(level=logging.INFO)
-    logging.info("Start %s: Länge %d, für max. %d s" % (TITEL, LKETTE, MAXZEIT))
+        LOG_LEVEL = logging.INFO
+
+    logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL, datefmt=LOG_DATEFMT)
 
     sys.exit(main())

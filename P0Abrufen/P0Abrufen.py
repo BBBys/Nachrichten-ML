@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#    P0Abrufen.py
-#    Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
-#    https://creativecommons.org/licenses/by-nc-sa/4.0/
+#   @file P0Abrufen.py
+#   @brief Abrufen aus ESS-Feeds und in Datei schreiben
+#   @version V2.2
+#   @date 29 Okt 2026 2025
+#   @author Dr. Burkhard Borys, Zeller Ring 15, 34246 Vellmar, Deutschland
+#   @copyright  Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
+#   https://creativecommons.org/licenses/by-nc-sa/4.0/
+#   
 
 import mysql.connector
 import logging, argparse
@@ -18,7 +23,8 @@ DBPORT = 3306
 DBUSER = "news"
 DBPWD = "news"
 TITEL = "P0Abrufen"
-VERSION = "V2"
+VERSION = "V2.2"
+MACHT = "RSS-Feed lesen und Meldungen in Datei schreiben"
 DBTBB = "blackboard"
 DSTUNDEN = 12
 UrlSPIEGEL = "https://www.spiegel.de/schlagzeilen/index.rss"
@@ -185,7 +191,7 @@ if __name__ == "__main__":
     import sys
 
     parser = argparse.ArgumentParser(
-        prog=TITEL, description="RSS abrufen und in Datei schreiben"
+        prog=TITEL,epilog=VERSION, description=MACHT
     )
     # parser.add_argument("Feed",help="Feed: S[piegel] | T[agesschau]")
     parser.add_argument(
@@ -205,10 +211,16 @@ if __name__ == "__main__":
     arguments = parser.parse_args()
     pfad = arguments.Ausgabe
     Dbg = arguments.pVerbose
-    Abstand = arguments.hh
+    Abstand = arguments.hh 
+        
+    LOG_FORMAT = "%(asctime)s %(name)s %(levelname)s %(message)s"
+    LOG_DATEFMT = "%m-%d %H:%M"
     if Dbg:
-        logging.basicConfig(level=logging.DEBUG)
+        LOG_LEVEL = logging.DEBUG
     else:
-        logging.basicConfig(level=logging.INFO)
-    logging.info("Start %s: Abstand %d Stunden, RSS --> %s" % (TITEL, Abstand, pfad))
+        LOG_LEVEL = logging.INFO
+
+    logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL, datefmt=LOG_DATEFMT)
+
+    logging.info("%s %s" % (TITEL, VERSION))
     sys.exit(main(Abstand, pfad))

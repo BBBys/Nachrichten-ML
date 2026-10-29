@@ -1,5 +1,0 @@
-mysql-connector-python
-logging
-argparse
-black
-nltk

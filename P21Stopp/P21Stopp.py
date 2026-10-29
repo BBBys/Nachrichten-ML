@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#  P21Stop.py
-#    Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
-#    https://creativecommons.org/licenses/by-nc-sa/4.0/
+#   @file P21Stopp.py
+#   @brief "Meldungen aufräumen, Stoppliste anwenden, in daten übertragen"
+#   @version V2.2
+#   @date 29 Okt 2026 2025
+#   @author Dr. Burkhard Borys, Zeller Ring 15, 34246 Vellmar, Deutschland
+#   @copyright  Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
+#   https://creativecommons.org/licenses/by-nc-sa/4.0/
+#   
 
 from dbparam import DBTBB, DBHOST, DBNAME, DBUSER, DBPORT, DBPWD
 
@@ -16,6 +21,8 @@ from dbroutinen import zurücksetzenDaten
 
 STOPPFILE = ""
 TITEL = "P21Stopp"
+VERSION = "V2.2"
+MACHT = "Meldungen aufräumen, Stoppliste anwenden, in Daten übertragen"
 ZURÜCK = False
 
 
@@ -102,8 +109,7 @@ if __name__ == "__main__":
     import sys
 
     parser = argparse.ArgumentParser(
-        prog=TITEL,
-        description="Meldungen aufräumen, Stoppliste anwenden, in daten übertragen",
+        prog=TITEL,epilog=VERSION, description=MACHT
     )
     parser.add_argument(dest="pStopp", help="Datei mit Stoppwörtern,\nüblich /usr/local/news/stop.txt")
     parser.add_argument(
@@ -130,10 +136,14 @@ if __name__ == "__main__":
     Dbg = arguments.pVerbose
     MAXMLD = int(arguments.pMaxMld)
     STOPPFILE = arguments.pStopp
+    LOG_FORMAT = "%(asctime)s %(levelname)s %(message)s"
+    LOG_DATEFMT = "%m-%d %H:%M"
     if Dbg:
-        logging.basicConfig(level=logging.DEBUG)
+        LOG_LEVEL = logging.DEBUG
     else:
-        logging.basicConfig(level=logging.INFO)
-    logging.info(f"Start {TITEL} mit Stoppfile {STOPPFILE}, max. {MAXMLD}")
+        LOG_LEVEL = logging.INFO
 
+    logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL, datefmt=LOG_DATEFMT)
+
+    logging.info("%s %s" % (TITEL, VERSION))
     sys.exit(main())

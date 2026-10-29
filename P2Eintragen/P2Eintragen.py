@@ -1,23 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#    P2Eintragen.py
-#    Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
-#    https://creativecommons.org/licenses/by-nc-sa/4.0/
+#   @file P2Eintragen.py
+#   @brief Zeilen aus Datei in DB aufnehmen
+#   @version V2.1
+#   @date 29 Okt 2026 2025
+#   @author Dr. Burkhard Borys, Zeller Ring 15, 34246 Vellmar, Deutschland
+#   @copyright  Nachrichten-ML © 2025-2026 by Burkhard Borys is licensed under CC BY-NC-SA 4.0
+#   https://creativecommons.org/licenses/by-nc-sa/4.0/
+#   
 
-# Wichtig:
-# export PYTHONPATH="../NMLlib"
-
-from dbparam import DBHOST, DB, DBUSER, DBPORT, DBPWD, DBTBB
+from dbparam import *
 from bearbeiten import bearbeiten
 from dbroutinen import dbcreate
 import mysql.connector
 import logging, argparse, os
 
-TITLE = "P2Eintragen"
-DESCRIPTION = """Auftrag von Blackboard ergibt Pfad zur Datei mit vom Feed abgerufenen 
-Meldungen. Diese bestehen aus Titel, Inhalt und weiteren Angaben und werden nur 
-so weit aufbereitet, dass sie in der DB gespeichert werden können"""
-
+TITEL = "P2Eintragen"
+VERSION = "V2.1"
+MACHT = "Zeilen aus Datei in DB aufnehmen"
 
 def main():
     try:
@@ -27,14 +27,14 @@ def main():
         with mydb.cursor() as mycursor:
             SQL = "SELECT id,parameter,parameter2,zeit FROM %s WHERE programm='%s';" % (
                 DBTBB,
-                TITLE,
+                TITEL,
             )
             mycursor.execute(SQL)
             Aufträge = mycursor.fetchall()
             logging.debug("%d Records" % len(Aufträge))
 
             if len(Aufträge) < 1:  # es muss Records geben
-                logging.info("für %s liegt nichts vor" % TITLE)
+                logging.info("für %s liegt nichts vor" % TITEL)
                 return 0
         # with mycursor
         Auftrag = Aufträge[0]
@@ -81,21 +81,23 @@ def main():
 if __name__ == "__main__":
     import sys
 
-    global Dbg
-    LOG_FORMAT = "%(levelname)s: %(message)s"
-    parser = argparse.ArgumentParser(prog=TITLE, description=DESCRIPTION)
-
+    parser = argparse.ArgumentParser(
+        prog=TITEL,epilog=VERSION, description=MACHT
+    )
     parser.add_argument(
         "-v", "--verbose", dest="pVerbose", action="store_true", help="Debug-Ausgabe"
     )
 
     arguments = parser.parse_args()
     Dbg = arguments.pVerbose
+    LOG_FORMAT = "%(asctime)s %(levelname)s %(message)s"
+    LOG_DATEFMT = "%m-%d %H:%M"
     if Dbg:
         LOG_LEVEL = logging.DEBUG
     else:
         LOG_LEVEL = logging.INFO
-    logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL)
 
-    logging.info("Start %s" % (TITLE))
+    logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL, datefmt=LOG_DATEFMT)
+
+    logging.info("%s %s" % (TITEL, VERSION))
     sys.exit(main())
